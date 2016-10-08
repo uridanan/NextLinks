@@ -1,15 +1,13 @@
 // content.js
 
+addLinksToShoppingCart();
+
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if( request.message === "clicked_browser_action" ) {
       var firstHref = $("a[href^='http']").eq(0).attr("href");
       console.log(firstHref);
 	  //alert("Hello from your Chrome extension!")
-
-  addLinksToShoppingCart()
-
-
   }
 }
 );
@@ -36,16 +34,43 @@ function processElement(e){
 }
 
 function addLink(html,url){
-  newHTML = "<a href="+url+">"+html+"</a>";
+  newHTML = "<a target=\"_blank\" href="+url+">"+html+"</a>";
   return newHTML;
 }
 
+function getCurrentURL(){
+  return window.location.href;
+}
+
+function getCurrentHostname(){
+  return window.location.hostname;
+}
+
+function getCurrentPathName(){
+  return window.location.pathname;
+}
+
+function getViewCartPathname(){
+  return "ViewData/ViewCart-View";
+}
+
+function getSearchPathname(){
+  return "search/SearchTerm-";
+}
+
+function getBaseURL(){
+  baseURL = getCurrentURL();
+  baseURL = baseURL.substring(0,baseURL.length - getViewCartPathname().length);
+  //console.log(baseURL);
+  return baseURL;
+}
+
 function getSearchURL(catalogNumber){
-  //TODO: retrieve the actual base URL so it works in all countries
   //TODO: retrieve the link from the search results and redirect
-  baseURL = "http://il.nextdirect.com/en/search/SearchTerm-";
-  url = baseURL + catalogNumber;
-  return url;
+  //searchURL = "http://il.nextdirect.com/en/search/SearchTerm-";
+  //url = searchURL + catalogNumber;
+  searchURL = getBaseURL() + getSearchPathname() + catalogNumber;
+  return searchURL;
 }
 
 function extractCatalogNumber(text){
