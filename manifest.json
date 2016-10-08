@@ -1,13 +1,13 @@
 {
   "manifest_version": 2,
   "name": "NextLinks",
-  "version": "0.1", 
+  "version": "0.1",
   "browser_action": {
 	"default_icon": "icon.png"
   },
   "content_scripts": [
 	  {
-		"matches": ["http://*.nextdirect.com/*", "https://*.nextdirect.com/*", "http://il.nextdirect.com/en/ViewData/ViewCart-View"],
+		"matches": ["http://*.nextdirect.com/*/ViewData/ViewCart-View", "https://*.nextdirect.com/*/ViewData/ViewCart-View", "http://il.nextdirect.com/en/ViewData/ViewCart-View"],
 		"js": ["jquery-3.1.1.min.js", "content.js"]
 	  }
 	],
