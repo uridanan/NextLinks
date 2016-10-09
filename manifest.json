@@ -3,7 +3,7 @@
   "name": "NextLinks",
   "version": "0.1",
   "browser_action": {
-	"default_icon": "icon.png"
+	"default_icon": "logo3.png"
   },
   "content_scripts": [
 	  {
