@@ -1,15 +1,25 @@
 // content.js
+var myShoppingBag = {};
 
 addLinksToShoppingCart();
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if( request.message === "clicked_browser_action" ) {
-      var firstHref = $("a[href^='http']").eq(0).attr("href");
-      console.log(firstHref);
-	  //alert("Hello from your Chrome extension!")
+        var firstHref = $("a[href^='http']").eq(0).attr("href");
+        console.log(firstHref);
+  	  //alert("Hello from your Chrome extension!")
+    }
+
+    if( request.message === "searchresult" ) {
+        url = request.url;
+        cat = request.cat;
+        console.log("Search Result received for " + cat + ": " + url);
+        e = myShoppingBag[cat];
+        html = e.innerHTML;
+        e.innerHTML = addLink(html,url);
+    }
   }
-}
 );
 
 function addLinksToShoppingCart(){
@@ -24,13 +34,14 @@ function addLinksToShoppingCart(){
 }
 
 function processElement(e){
-  html = e.innerHTML
-  text = e.innerText
+  html = e.innerHTML;
+  text = e.innerText;
   console.log(text);
   cat = extractCatalogNumber(text);
   console.log(cat);
+  myShoppingBag[cat] = e;
   url = getSearchURL(cat);
-  e.innerHTML = addLink(html,url);
+  getPageContent(url, cat);
 }
 
 function addLink(html,url){
@@ -83,6 +94,17 @@ function getElementsInShoppingCart(){
 
 function openNewTab(url){
   chrome.runtime.sendMessage({"message": "open_new_tab", "url": url});
+}
+
+//////////////////////////
+//Retrieve the first search result
+//////////////////////////
+function sendMessage(msg, url){
+  chrome.runtime.sendMessage({"message": msg, "url": url});
+}
+
+function getPageContent(url, cat){
+  chrome.runtime.sendMessage({"message": "getpagecontent", "url": url, "cat": cat});
 }
 
 //<div class="basketDesc">
