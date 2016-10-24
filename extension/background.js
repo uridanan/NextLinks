@@ -38,13 +38,18 @@ function createShoppingBagTable(shoppingbagobject){
 
 function getItems(shoppingbagobject){
   var table = document.createElement('table');
+  //table.style.border = "1";table.border = "1";
+  table.style.width ="100%";table.width ="100%";
+
   var items = getItemRows(shoppingbagobject);
   for (var i in items) {
     if (items.hasOwnProperty(i)) {
       var row = table.insertRow(i);
+
       // Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:
       var cell1 = row.insertCell(0);
       var cell2 = row.insertCell(1);
+
       // Add some text to the new cells:
       cell1.innerHTML = getItemImage(items[i]);
       cell2.innerHTML = getItemText(items[i]);
@@ -65,10 +70,21 @@ function getItemImage(item){
   }
 }
 
+function extractCatalogNumber(text){
+  return text.substring(text.length - 11);
+}
+
+function extractDescription(text){
+  return text.substring(0,text.length - 11);
+}
+
 function getItemText(item){
   var basketDesc = item.getElementsByClassName("basketDesc");
   if(basketDesc != null && basketDesc.length > 0){
-    return basketDesc[0].innerText;
+        var text = basketDesc[0].innerText;
+        var cat = extractCatalogNumber(text);
+        var desc = extractDescription(text);
+        return desc + "<br>" + cat;
   }
 }
 
