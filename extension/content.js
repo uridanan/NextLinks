@@ -1,7 +1,9 @@
 // content.js
 var myShoppingBag = {};
 
+sendShoppingBagToPopup();
 addLinksToShoppingCart();
+
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
@@ -105,6 +107,24 @@ function sendMessage(msg, url){
 
 function getPageContent(url, cat){
   chrome.runtime.sendMessage({"message": "getpagecontent", "url": url, "cat": cat});
+}
+
+//////////////////////////
+//Send shhopping cart to popup
+//////////////////////////
+function extractShoppingBag(){
+  var bag;
+  var elements = document.getElementsByClassName("orderCells");
+  if(elements != null && elements.length > 0){
+    bag = elements[0].outerHTML;
+  }
+  return bag;
+}
+
+function sendShoppingBagToPopup(){
+  var shoppingbag = extractShoppingBag();
+  console.log("Send shoppingbag: " + shoppingbag);
+  chrome.runtime.sendMessage({"message": "shoppingbagitems", "payload": shoppingbag});
 }
 
 //<div class="basketDesc">
