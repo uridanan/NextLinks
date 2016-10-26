@@ -7,12 +7,6 @@ addLinksToShoppingCart();
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-    if( request.message === "clicked_browser_action" ) {
-        var firstHref = $("a[href^='http']").eq(0).attr("href");
-        console.log(firstHref);
-  	  //alert("Hello from your Chrome extension!")
-    }
-
     if( request.message === "searchresult" ) {
         url = request.url;
         cat = request.cat;
@@ -24,6 +18,11 @@ chrome.runtime.onMessage.addListener(
   }
 );
 
+
+///////////////////////////////////////////////////////////////////////////////
+//Add Links to shopping cart
+///////////////////////////////////////////////////////////////////////////////
+
 function addLinksToShoppingCart(){
   var elements = getElementsInShoppingCart();
   for (var i in elements) {
@@ -33,6 +32,10 @@ function addLinksToShoppingCart(){
       console.log(e.innerHTML);
     }
   }
+}
+
+function getElementsInShoppingCart(){
+  return document.getElementsByClassName("basketDesc");
 }
 
 function processElement(e){
@@ -46,72 +49,30 @@ function processElement(e){
   getPageContent(url, cat);
 }
 
+function getPageContent(url, cat){
+  chrome.runtime.sendMessage({"message": "getpagecontent", "url": url, "cat": cat});
+}
+
+function sendMessage(msg, url){
+  chrome.runtime.sendMessage({"message": msg, "url": url});
+}
+
+//Called in the callback from getPageContent
 function addLink(html,url){
   newHTML = "<a target=\"_blank\" href="+url+">"+html+"</a>";
   return newHTML;
 }
 
-function getCurrentURL(){
-  return window.location.href;
+///////////////////////////////////////////////////////////////////////////////
+//Send shopping bag to popup
+///////////////////////////////////////////////////////////////////////////////
+
+function sendShoppingBagToPopup(){
+  var shoppingbag = extractShoppingBag();
+  console.log("Send shoppingbag: " + shoppingbag);
+  chrome.runtime.sendMessage({"message": "shoppingbagitems", "payload": shoppingbag});
 }
 
-function getCurrentHostname(){
-  return window.location.hostname;
-}
-
-function getCurrentPathName(){
-  return window.location.pathname;
-}
-
-function getViewCartPathname(){
-  return "ViewData/ViewCart-View";
-}
-
-function getSearchPathname(){
-  return "search/SearchTerm-";
-}
-
-function getBaseURL(){
-  baseURL = getCurrentURL();
-  baseURL = baseURL.substring(0,baseURL.length - getViewCartPathname().length);
-  //console.log(baseURL);
-  return baseURL;
-}
-
-function getSearchURL(catalogNumber){
-  //TODO: retrieve the link from the search results and redirect
-  //searchURL = "http://il.nextdirect.com/en/search/SearchTerm-";
-  //url = searchURL + catalogNumber;
-  searchURL = getBaseURL() + getSearchPathname() + catalogNumber;
-  return searchURL;
-}
-
-function extractCatalogNumber(text){
-  return text.substring(text.length - 11);
-}
-
-function getElementsInShoppingCart(){
-  return document.getElementsByClassName("basketDesc");
-}
-
-function openNewTab(url){
-  chrome.runtime.sendMessage({"message": "open_new_tab", "url": url});
-}
-
-//////////////////////////
-//Retrieve the first search result
-//////////////////////////
-function sendMessage(msg, url){
-  chrome.runtime.sendMessage({"message": msg, "url": url});
-}
-
-function getPageContent(url, cat){
-  chrome.runtime.sendMessage({"message": "getpagecontent", "url": url, "cat": cat});
-}
-
-//////////////////////////
-//Send shhopping cart to popup
-//////////////////////////
 function extractShoppingBag(){
   var bag;
   var elements = document.getElementsByClassName("orderCells");
@@ -120,14 +81,3 @@ function extractShoppingBag(){
   }
   return bag;
 }
-
-function sendShoppingBagToPopup(){
-  var shoppingbag = extractShoppingBag();
-  console.log("Send shoppingbag: " + shoppingbag);
-  chrome.runtime.sendMessage({"message": "shoppingbagitems", "payload": shoppingbag});
-}
-
-//<div class="basketDesc">
-//<span>Velvet Block Heel Boots</span>
-//<br>
-//<br>433-265-G64</div>
