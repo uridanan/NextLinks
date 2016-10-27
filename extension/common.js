@@ -31,6 +31,14 @@ function getBaseURLFromViewCart(){
   return baseURL;
 }
 
+function getCurrentURLFromAnywhere(){
+  var currentURL;
+  chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
+        currentURL = tabs[0].url;
+  });
+  return currentURL;
+}
+
 function getBaseURL(){
   currenturl = getCurrentURL();
   start = 0;

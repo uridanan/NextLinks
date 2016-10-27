@@ -3,17 +3,6 @@
 //Global variables readable from popup.js
 var shoppingbagitems;
 
-// Called when the user clicks on the browser action.
-chrome.browserAction.onClicked.addListener(function(tab) {
-  // Send a message to the active tab
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    var activeTab = tabs[0];
-    chrome.tabs.sendMessage(activeTab.id, {"message": "clicked_browser_action"});
-    console.log("Message received: clicked_browser_action");
-    //getShoppingCartView();
-  });
-});
-
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if( request.message === "open_new_tab" ) {
@@ -25,13 +14,18 @@ chrome.runtime.onMessage.addListener(
     }
     if( request.message == "shoppingbagitems" ){
       console.log("Message received: shoppingbagitems");
-      shoppingbagitems =  request.payload;
-      shoppingbagobjects = jQuery.parseHTML(shoppingbagitems);
-      createShoppingBagTable(shoppingbagobjects[0]);
+      // shoppingbagitems =  request.payload;
+      // shoppingbagobjects = jQuery.parseHTML(shoppingbagitems);
+      // createShoppingBagTable(shoppingbagobjects[0]);
+    }
+    if( request.message == "oniconclick" ){
+      console.log("Message received: oniconclick");
+      var viewcarturl = request.url;
+      getShoppingCartView(viewcarturl);
+      //getShoppingCartView();
     }
   }
 );
-
 
 function string2DOM(text){
   var div = document.createElement('div');

@@ -1,5 +1,11 @@
 //popup.js
-window.onload = createPopup();
+main();
+
+function main(){
+  viewcarturl = "http://il.nextdirect.com/en/ViewData/ViewCart-View";//getShoppingCartViewUrl();
+  chrome.runtime.sendMessage({"message": "oniconclick","url":viewcarturl});
+  window.onload = createPopup();
+}
 
 function createPopup(){
   setVersionInfo();

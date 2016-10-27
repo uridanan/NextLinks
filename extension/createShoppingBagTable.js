@@ -61,12 +61,14 @@ function getSelectedText(cell){
 
 ////////////////////////////////////////////////////////////////////////////////
 //Extract shopping bag items from shopping cart view
+//ViewCart URL passed as parameter because you can't get it from background
 ////////////////////////////////////////////////////////////////////////////////
-function getShoppingCartView(){
+function getShoppingCartView(url){
+  //var url = getShoppingCartViewUrl();
   var x = new XMLHttpRequest();
   x.overrideMimeType('text/xml');
   console.log("getShoppingCartView");
-  var url = getShoppingCartViewUrl();
+  console.log(url);
   x.open('GET', url);
   x.onreadystatechange = function() {
     if (x.readyState == 4 && x.status == 200) {
