@@ -20,9 +20,14 @@ chrome.runtime.onMessage.addListener(
     }
     if( request.message == "oniconclick" ){
       console.log("Message received: oniconclick");
-      var viewcarturl = request.url;
-      getShoppingCartView(viewcarturl);
-      //getShoppingCartView();
+      chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
+          currentURL = tabs[0].url;
+          console.log("Current URL:" + currentURL);
+          if(currentURL != null){
+            var viewcarturl = getShoppingCartViewUrl(currentURL);
+            getShoppingCartView(viewcarturl);
+          }
+      });
     }
   }
 );

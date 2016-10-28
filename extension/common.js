@@ -31,21 +31,17 @@ function getBaseURLFromViewCart(){
   return baseURL;
 }
 
-function getCurrentURLFromAnywhere(){
-  var currentURL;
-  chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
-        currentURL = tabs[0].url;
-  });
-  return currentURL;
-}
-
-function getBaseURL(){
-  currenturl = getCurrentURL();
+function getBaseURLFrom(currenturl){
   start = 0;
   end = currenturl.search("nextdirect.com") + 18;
   baseURL = currenturl.substring(start,end);
   console.log(baseURL);
   return baseURL;
+}
+
+function getBaseURL(){
+  currenturl = getCurrentURL();
+  return getBaseURLFrom(currentURL);
 }
 
 function getSearchURL(catalogNumber){
@@ -64,11 +60,15 @@ function extractDescription(text){
   return text.substring(0,text.length - 11);
 }
 
-function getShoppingCartViewUrl(){
-  //return "http://il.nextdirect.com/en/ViewData/ViewCart-View";
-  return getBaseURL() + getViewCartPathname();
-}
+// function getShoppingCartViewUrl(){
+//   //return "http://il.nextdirect.com/en/ViewData/ViewCart-View";
+//   return getBaseURL() + getViewCartPathname();
+// }
 
+function getShoppingCartViewUrl(currentURL){
+  //return "http://il.nextdirect.com/en/ViewData/ViewCart-View";
+  return getBaseURLFrom(currentURL) + getViewCartPathname();
+}
 
 //////////////////////////
 //Messages & Chrome Actions

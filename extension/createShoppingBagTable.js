@@ -16,6 +16,9 @@ function getItems(shoppingbagobject){
   table.style.width ="100%";table.width ="100%";
 
   var items = getItemRows(shoppingbagobject);
+  if(items.length == 0){
+    table.innerHTML = shoppingbagobject.outerHTML;
+  }
   for (var i in items) {
     if (items.hasOwnProperty(i)) {
       var row = table.insertRow(i);
@@ -64,7 +67,6 @@ function getSelectedText(cell){
 //ViewCart URL passed as parameter because you can't get it from background
 ////////////////////////////////////////////////////////////////////////////////
 function getShoppingCartView(url){
-  //var url = getShoppingCartViewUrl();
   var x = new XMLHttpRequest();
   x.overrideMimeType('text/xml');
   console.log("getShoppingCartView");
@@ -89,6 +91,10 @@ function processViewCartResponse(response){
 function extractOrderCellsTable(response){
   //Extract the relevant div then convert into xmlDoc
   start = response.search("<table class=\"orderCells\"");
+  if(start == -1){
+    //No table found
+    return "<tr width=\"100%\" align=\"center\"><td width=\"100%\" align=\"center\">Your shopping bag is empty</td></tr>";
+  }
   eod = response.length-1;
   substr = response.substring(start,eod);
   end = substr.search("</table>");

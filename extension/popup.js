@@ -2,8 +2,9 @@
 main();
 
 function main(){
-  viewcarturl = "http://il.nextdirect.com/en/ViewData/ViewCart-View";//getShoppingCartViewUrl();
-  chrome.runtime.sendMessage({"message": "oniconclick","url":viewcarturl});
+  // viewcarturl = "http://il.nextdirect.com/en/ViewData/ViewCart-View";//getShoppingCartViewUrl();
+  // chrome.runtime.sendMessage({"message": "oniconclick","url":viewcarturl});
+  chrome.runtime.sendMessage({"message": "oniconclick"});
   window.onload = createPopup();
 }
 
