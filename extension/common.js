@@ -41,7 +41,7 @@ function getBaseURLFrom(currenturl){
 
 function getBaseURL(){
   currenturl = getCurrentURL();
-  return getBaseURLFrom(currentURL);
+  return getBaseURLFrom(currenturl);
 }
 
 function getSearchURL(catalogNumber){

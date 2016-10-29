@@ -5,8 +5,16 @@ function main(){
   // viewcarturl = "http://il.nextdirect.com/en/ViewData/ViewCart-View";//getShoppingCartViewUrl();
   // chrome.runtime.sendMessage({"message": "oniconclick","url":viewcarturl});
   chrome.runtime.sendMessage({"message": "oniconclick"});
-  window.onload = createPopup();
+  //window.onload = createPopup();
 }
+
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    if( request.message === "onshoppingbagready" ) {
+      createPopup();
+    }
+  });
+
 
 function createPopup(){
   setVersionInfo();

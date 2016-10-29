@@ -8,6 +8,7 @@ function createShoppingBagTable(shoppingbagobject){
   //Copy bag to HTML document
   shoppingbagtable = getItems(shoppingbagobject);
   shoppingbagitems = shoppingbagtable.outerHTML;
+  chrome.runtime.sendMessage({"message": "onshoppingbagready"});
 }
 
 function getItems(shoppingbagobject){
