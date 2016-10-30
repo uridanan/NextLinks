@@ -1,7 +1,19 @@
 // content.js
-var myShoppingBag = {};
+var myShoppingBag = {
+  bag: {},
+  add: function(cat, element){
+    if(this.bag[cat] == null){
+      this.bag[cat] = [element];
+    }
+    else{
+      this.bag[cat].push(element);
+    }
+  },
+  get: function(cat){
+    return this.bag[cat];
+  }
+};
 
-sendShoppingBagToPopup();
 addLinksToShoppingCart();
 
 
@@ -11,9 +23,11 @@ chrome.runtime.onMessage.addListener(
         url = request.url;
         cat = request.cat;
         console.log("Search Result received for " + cat + ": " + url);
-        e = myShoppingBag[cat];
-        html = e.innerHTML;
-        e.innerHTML = addLink(html,url);
+        elements = myShoppingBag.get(cat);
+        for (i in elements){
+          html = elements[i].innerHTML;
+          elements[i].innerHTML = addLink(html,url);
+        }
     }
   }
 );
@@ -44,7 +58,7 @@ function processElement(e){
   console.log(text);
   cat = extractCatalogNumber(text);
   console.log(cat);
-  myShoppingBag[cat] = e;
+  myShoppingBag.add(cat,e);
   url = getSearchURL(cat);
   getPageContent(url, cat);
 }
@@ -61,23 +75,4 @@ function sendMessage(msg, url){
 function addLink(html,url){
   newHTML = "<a target=\"_blank\" href="+url+">"+html+"</a>";
   return newHTML;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-//Send shopping bag to popup
-///////////////////////////////////////////////////////////////////////////////
-
-function sendShoppingBagToPopup(){
-  var shoppingbag = extractShoppingBag();
-  console.log("Send shoppingbag: " + shoppingbag);
-  chrome.runtime.sendMessage({"message": "shoppingbagitems", "payload": shoppingbag});
-}
-
-function extractShoppingBag(){
-  var bag;
-  var elements = document.getElementsByClassName("orderCells");
-  if(elements != null && elements.length > 0){
-    bag = elements[0].outerHTML;
-  }
-  return bag;
 }
