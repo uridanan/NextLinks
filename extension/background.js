@@ -3,6 +3,27 @@
 //Global variables readable from popup.js
 var shoppingbagitems;
 
+
+// Listen for any changes to the URL of any tab.
+chrome.tabs.onActivated.addListener(function(activeInfo){
+  tabId = activeInfo.tabId;
+  chrome.tabs.get(tabId, checkForValidUrl);
+});
+
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
+  chrome.tabs.get(tabId, checkForValidUrl);
+});
+
+// Called when the url of a tab changes.
+function checkForValidUrl(tab) {
+  // If the tabs url contains "nextdirect.com"...
+  if (tab.url.search('nextdirect.com') > -1) {
+    // ... show the page action.
+    chrome.pageAction.show(tab.id);
+  }
+};
+
+
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if( request.message === "open_new_tab" ) {

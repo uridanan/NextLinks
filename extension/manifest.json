@@ -5,7 +5,7 @@
   "permissions": [
           "tabs"
         ],
-  "browser_action": {
+  "page_action": {
 	   "default_icon": "logo3.png",
      "default_popup": "popup.html"
   },
